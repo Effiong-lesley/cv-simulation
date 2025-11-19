@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cyber Vulnerability Study | Coventry University</title>
+  <link rel="icon" href="image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-dark: #1d4ed8;
+      --secondary: #0d9488;
+      --light-bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --text-light: #64748b;
+      --success: #16a34a;
+      --warning: #dc2626;
+      --info: #0ea5e9;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.6;
+      background-color: var(--light-bg);
+      color: var(--text);
+      padding: 16px;
+    }
+    .container {
+      max-width: 650px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding: 20px 0;
+    }
+    .logo { font-size: 2.2rem; margin-bottom: 8px; }
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      max-width: 600px;
+      margin: 0 auto 20px;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+    }
+    .intro-list {
+      background: #f0f9ff;
+      border-left: 4px solid var(--primary);
+      padding: 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+    }
+    .intro-list li {
+      margin-bottom: 8px;
+      list-style: none;
+      padding-left: 24px;
+      position: relative;
+    }
+    .intro-list li:before {
+      content: "•";
+      color: var(--primary);
+      font-weight: bold;
+      position: absolute;
+      left: 8px;
+      font-size: 1.4rem;
+    }
+
+    /* ID Input */
+    .id-input {
+      display: flex;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    .id-input input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    .id-input input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.2);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px 28px;
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(30, 64, 175, 0.2);
+    }
+    .btn:active { transform: translateY(0); }
+    .btn-secondary { background: #64748b; }
+    .btn-secondary:hover { background: #475569; }
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+    }
+    .btn-outline:hover {
+      background: rgba(30, 64, 175, 0.05);
+    }
+    .btn-google {
+      background: white;
+      color: #34a853;
+      border: 1px solid #dadce0;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    .btn-google:hover {
+      background: #f8f9fa;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+
+    /* Progress */
+    .progress-container {
+      width: 100%;
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 3px;
+      margin: 16px 0;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: var(--secondary);
+      border-radius: 3px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .progress-label {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-bottom: 12px;
+    }
+
+    /* Lure */
+    .lure-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .platform-badge {
+      font-size: 0.8rem;
+      font-weight: bold;
+      padding: 4px 12px;
+      border-radius: 20px;
+      color: white;
+    }
+    .instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+    .linkedin { background: #0077b5; }
+    .whatsapp { background: #25d366; }
+    .facebook { background: #1877f2; }
+    .sms { background: #0d9488; }
+    .time { font-size: 0.85rem; color: var(--text-light); }
+    .lure-message {
+      background: #f8fafc;
+      padding: 16px;
+      border-radius: 12px;
+      margin: 16px 0;
+      border-left: 3px solid var(--primary);
+    }
+    .lure-note {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-top: 10px;
+      font-style: italic;
+    }
+    .audio-player {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 16px 0;
+    }
+    .audio-player button {
+      padding: 8px 16px;
+      font-size: 0.95rem;
+    }
+    .response-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .response-btn {
+      flex: 1;
+      min-width: 120px;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-click { background: var(--warning); color: white; }
+    .btn-click:hover { background: #b91c1c; }
+    .btn-ignore { background: #e2e8f0; color: var(--text); }
+    .btn-ignore:hover { background: #cbd5e1; }
+
+    /* Consent Checkbox */
+    .consent-box {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 16px 0;
+    }
+    .consent-box input {
+      margin-top: 4px;
+      transform: scale(1.2);
+    }
+
+    /* Debrief */
+    .results-summary { margin-top: 20px; }
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px dashed var(--border);
+    }
+    .result-label { font-weight: 600; }
+    .result-clicked { color: var(--warning); }
+    .result-ignored { color: var(--success); }
+    .upload-status {
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 12px;
+      font-size: 0.9rem;
+    }
+    .status-success { background: #f0fdf4; color: var(--success); }
+    .status-error { background: #fef2f2; color: var(--warning); }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">🛡️</div>
+      <h1>Cyber Vulnerability Study</h1>
+      <p class="subtitle">A research project by Coventry University</p>
+    </header>
+
+    <!-- INTRO -->
+    <div id="screen-intro" class="card">
+      <h2 style="text-align:center; margin-bottom:16px;">Thank you for participating!</h2>
+      <p>This study examines how people respond to various cybersecurity scenarios.</p>
+
+      <div class="intro-list">
+        <li><strong>What to expect:</strong> You will be presented with <strong>5 realistic scenarios</strong> and asked how you would respond. This should take approximately <strong>5–10 minutes</strong>.</li>
+        <li><strong>Privacy:</strong> This study is completely <strong>anonymous</strong>. No personal information, cookies, or identifying data will be collected. All responses are stored locally on your device.</li>
+        <li><strong>Ethics:</strong> All scenarios are <strong>simulated for research purposes only</strong>. No real phishing or malicious content is involved.</li>
+        <li><strong>Voluntary:</strong> You may withdraw at any time by closing this page.</li>
+      </div>
+
+      <!-- Survey ID Input -->
+      <div class="id-input">
+        <label for="survey-id" style="font-weight:600;">Survey ID (e.g., P042):</label>
+        <input type="text" id="survey-id" placeholder="Enter your ID from the survey" maxlength="10">
+      </div>
+
+      <div style="text-align:center; margin-top:20px;">
+        <button id="btn-consent" class="btn">I Agree to Participate</button>
+      </div>
+    </div>
+
+    <!-- LURE -->
+    <div id="screen-lure" class="card hidden">
+      <div class="progress-label">Scenario <span id="current-num">1</span> of 5</div>
+      <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+
+      <div class="lure-header">
+        <span class="platform-badge" id="platform-badge"></span>
+        <span class="time" id="lure-time"></span>
+      </div>
+      <div class="lure-message" id="lure-message"></div>
+      <div class="lure-note" id="lure-note"></div>
+
+      <!-- Audio Player (for deepfake) -->
+      <div id="audio-section" class="audio-player hidden">
+        <button id="btn-play-audio" class="btn-outline">▶️ Play Voicemail (12 sec)</button>
+        <span id="audio-status" style="font-size:0.9rem; color:var(--text-light);">Synthetic voice sample — no real deepfake</span>
+      </div>
+
+      <div class="response-btns">
+        <button class="response-btn btn-click" data-action="click">Yes, I would respond/click</button>
+        <button class="response-btn btn-ignore" data-action="ignore">No, I would ignore</button>
+      </div>
+    </div>
+
+    <!-- DEBRIEF -->
+    <div id="screen-debrief" class="card hidden">
+      <h2 style="text-align:center; color:var(--success);">✅ Thank You!</h2>
+      <p>You’ve completed the Cyber Vulnerability Study.</p>
+
+      <h3 style="margin:20px 0 12px;">Your Responses</h3>
+      <div class="results-summary" id="results-summary"></div>
+
+      <!-- Optional Upload -->
+      <div style="margin-top:24px; padding-top:20px; border-top:1px solid var(--border);">
+        <h3>📤 Optional: Securely Submit Results</h3>
+        <p style="margin-bottom:12px;">
+          To support this research, you may choose to upload your anonymous results to our secure Google Sheet.
+          <br><small style="color:var(--text-light);">
+            🔐 No ID or personal data is sent. Only: scenario type, response, and time.
+          </small>
+        </p>
+
+        <div class="consent-box">
+          <input type="checkbox" id="consent-upload">
+          <label for="consent-upload">
+            I consent to the anonymous upload of my responses for research analysis.
+            <br><em>(You can still export locally even if you decline.)</em>
+          </label>
+        </div>
+
+        <div style="text-align:center; margin-top:16px;">
+          <button id="btn-upload" class="btn btn-google" disabled>
+            📤 Upload to Google Sheets (via secure proxy)
+          </button>
+        </div>
+        <div id="upload-feedback" class="upload-status hidden"></div>
+      </div>
+
+      <div style="background:#f0fdf4; padding:16px; border-radius:12px; margin-top:20px;">
+        <p><strong>🔒 Your data is safe:</strong> All responses are stored only on this device.</p>
+        <div style="text-align:center; margin-top:16px;">
+          <button id="btn-export" class="btn" style="background:#0d9488;">Export My Anonymous Results (CSV)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // === 5 SCENARIOS (with audio flag) ===
+    const BASE_SCENARIOS = [
+      {
+        id: 'phishing_urgent',
+        platform: 'Email (Work Outlook)',
+        badgeClass: 'sms',
+        time: '10:03 AM',
+        sender: 'IT Support <no-reply@company-it[.]com>',
+        message: "🔒 URGENT: Your password expires in 2 hours.\n\nTo avoid account lockout, click below to reset immediately:\n[Reset Password Now]",
+        type: "Urgency-Based Phishing",
+        note: "Simulated credential-harvesting attempt (generic)"
+      },
+      {
+        id: 'ai_pretext',
+        platform: 'LinkedIn',
+        badgeClass: 'linkedin',
+        time: '2:17 PM',
+        sender: 'Sarah Williams (NexaTech HR)',
+        message: "Hi [Name], I saw your recent post on cybersecurity — great insights! We’re running a free workshop on AI threat detection next week. As someone in the field, you might find our new guide useful:",
+        type: "AI-Generated Pretexting",
+        note: "Uses contextual flattery & professional relevance"
+      },
+      {
+        id: 'deepfake_voicemail',
+        platform: 'WhatsApp',
+        badgeClass: 'whatsapp',
+        time: '4:48 PM',
+        sender: '+44 7XXX XXXXXX (Bank Alerts)',
+        message: "🔔 New secure voicemail (1:08)\nFrom: National Banking Security Team\nTopic: Suspicious login detected from Lagos, Nigeria",
+        type: "Deepfake Audio Lure",
+        note: "Synthetic voice sample only — tests response to urgency + authority.",
+        hasAudio: true
+      },
+      {
+        id: 'social_validation',
+        platform: 'Instagram DM',
+        badgeClass: 'instagram',
+        time: 'Yesterday',
+        sender: '@tech.influencer',
+        message: "Hey! 👋 Loved your comment on my post. You’re one of 100 users selected for our *exclusive* cybersecurity toolkit giveaway 🎁. Tap below to claim before it’s gone!",
+        type: "Social Validation / Scarcity Hook",
+        note: "Exploits FOMO & influencer trust"
+      },
+      {
+        id: 'fake_2fa',
+        platform: 'SMS',
+        badgeClass: 'sms',
+        time: 'Just now',
+        sender: 'Google',
+        message: "Google Alert: New sign-in to your account from Chrome on Windows (London, UK). If this wasn’t you, secure your account now:\n🔒 google-verify[.]xyz/security",
+        type: "Fake 2FA / Session Hijack",
+        note: "Mimics real Google alerts"
+      }
+    ];
+
+    // === STATE ===
+    let PARTICIPANT_ID = '';
+    let SCENARIOS = [];
+    let currentIdx = 0;
+    let responses = [];
+    const total = 5;
+
+    // DOM
+    const screenIntro = document.getElementById('screen-intro');
+    const screenLure = document.getElementById('screen-lure');
+    const screenDebrief = document.getElementById('screen-debrief');
+    const btnConsent = document.getElementById('btn-consent');
+    const btnExport = document.getElementById('btn-export');
+    const btnUpload = document.getElementById('btn-upload');
+    const btnPlayAudio = document.getElementById('btn-play-audio');
+    const consentUpload = document.getElementById('consent-upload');
+    const uploadFeedback = document.getElementById('upload-feedback');
+    const surveyIdInput = document.getElementById('survey-id');
+    const progressBar = document.getElementById('progress-bar');
+    const currentNumEl = document.getElementById('current-num');
+    const platformBadgeEl = document.getElementById('platform-badge');
+    const lureTimeEl = document.getElementById('lure-time');
+    const lureMessageEl = document.getElementById('lure-message');
+    const lureNoteEl = document.getElementById('lure-note');
+    const audioSection = document.getElementById('audio-section');
+    const resultsSummaryEl = document.getElementById('results-summary');
+
+    // === AUDIO SIMULATION (Web Audio API) ===
+    let audioContext = null;
+    function playSyntheticAudio() {
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        btnPlayAudio.textContent = "⏸️ Stop";
+      } else {
+        if (audioContext.state === 'suspended') audioContext.resume();
+        btnPlayAudio.textContent = "⏸️ Stop";
+      }
+
+      // Simple beep sequence to simulate "voicemail" (ethical: no real speech)
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      oscillator.frequency.value = 800;
+      gainNode.gain.value = 0.1;
+      oscillator.start();
+      setTimeout(() => {
+        oscillator.frequency.value = 600;
+        setTimeout(() => oscillator.stop(), 500);
+      }, 300);
+
+      // Auto-stop after 12 sec
+      setTimeout(() => {
+        if (audioContext && audioContext.state !== 'closed') {
+          audioContext.close();
+          audioContext = null;
+          btnPlayAudio.textContent = "▶️ Play Voicemail (12 sec)";
+        }
+      }, 12000);
+    }
+
+    // === INIT SCENARIOS WITH RANDOM ORDER ===
+    function shuffleArray(array) {
+      return [...array].sort(() => Math.random() - 0.5);
+    }
+
+    // === FUNCTIONS ===
+    function updateProgress() {
+      const percent = ((currentIdx) / total) * 100;
+      progressBar.style.width = `${percent}%`;
+      currentNumEl.textContent = currentIdx + 1;
+    }
+
+    function showIntro() {
+      screenIntro.classList.remove('hidden');
+      screenLure.classList.add('hidden');
+      screenDebrief.classList.add('hidden');
+    }
+
+    function showScenario(idx) {
+      if (idx >= total) {
+        showDebrief();
+        return;
+      }
+
+      const s = SCENARIOS[idx];
+      currentIdx = idx;
+      updateProgress();
+
+      screenIntro.classList.add('hidden');
+      screenDebrief.classList.add('hidden');
+      screenLure.classList.remove('hidden');
+
+      platformBadgeEl.className = `platform-badge ${s.badgeClass}`;
+      platformBadgeEl.textContent = s.platform;
+      lureTimeEl.textContent = s.time;
+      lureMessageEl.innerHTML = `<strong>${s.sender}</strong><br><br>${s.message.replace(/\n/g, '<br>')}`;
+      lureNoteEl.textContent = s.note || '';
+
+      // Audio?
+      if (s.hasAudio) {
+        audioSection.classList.remove('hidden');
+        btnPlayAudio.onclick = playSyntheticAudio;
+      } else {
+        audioSection.classList.add('hidden');
+      }
+
+      // Bind response buttons
+      document.querySelector('[data-action="click"]').onclick = () => recordResponse(true);
+      document.querySelector('[data-action="ignore"]').onclick = () => recordResponse(false);
+    }
+
+    function recordResponse(clicked) {
+      const latency = Math.floor(Date.now() - window.startTime) || Math.floor(Math.random() * 3000) + 500;
+      responses.push({
+        participant_id: PARTICIPANT_ID || 'anonymous',
+        scenario_id: SCENARIOS[currentIdx].id,
+        scenario_type: SCENARIOS[currentIdx].type,
+        clicked: clicked ? 1 : 0,
+        latency_ms: latency,
+        timestamp: new Date().toISOString()
+      });
+
+      window.startTime = Date.now();
+      setTimeout(() => showScenario(currentIdx + 1), 300);
+    }
+
+    function showDebrief() {
+      screenLure.classList.add('hidden');
+      screenDebrief.classList.remove('hidden');
+
+      let html = '';
+      responses.forEach((r, i) => {
+        const status = r.clicked ? 
+          `<span class="result-clicked">⚠️ Clicked</span>` : 
+          `<span class="result-ignored">✅ Ignored</span>`;
+        html += `<div class="result-item"><span class="result-label">${i+1}. ${r.scenario_type}</span>${status}</div>`;
+      });
+      resultsSummaryEl.innerHTML = html;
+
+      // Enable upload button if consent given
+      consentUpload.addEventListener('change', () => {
+        btnUpload.disabled = !consentUpload.checked;
+      });
+    }
+
+    // === EXPORT ===
+    function exportCSV() {
+      const headers = ['participant_id', 'scenario_id', 'scenario_type', 'clicked', 'latency_ms', 'timestamp'];
+      const rows = responses.map(r => 
+        `"${r.participant_id}","${r.scenario_id}","${r.scenario_type}",${r.clicked},${r.latency_ms},"${r.timestamp}"`
+      );
+      const csv = "text/csv;charset=utf-8," + [headers.join(','), ...rows].join('\n');
+      const a = document.createElement('a');
+      a.href = encodeURI(csv);
+      a.download = `cv_results_${PARTICIPANT_ID || 'anon'}_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+    }
+
+    // === UPLOAD (Mock Google Sheets — replace with real endpoint later) ===
+    async function uploadToSheets() {
+      if (!consentUpload.checked) return;
+
+      const uploadBtn = btnUpload;
+      uploadBtn.disabled = true;
+      uploadBtn.textContent = "📤 Uploading…";
+
+      try {
+  const response = await fetch('https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbwTWV-FrG2v-pI57-JM2QBvtImFdiPBFGUNsxJLJkyTzzFZvP8GJZdaMXP3tSfTbnUh/exec', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    participant_id: PARTICIPANT_ID,
+    scenario_id: latest.scenario_id,
+    scenario_type: latest.scenario_type,
+    clicked: latest.clicked === 1,
+    latency_ms: latest.latency_ms
+  })
+});
+
+const result = await response.json();
+if (result.status !== 'success') throw new Error(result.message || 'Upload failed');
+        uploadFeedback.textContent = "✅ Upload successful! Thank you for contributing to research.";
+        uploadFeedback.className = "upload-status status-success";
+      } catch (e) {
+        uploadFeedback.textContent = "❌ Upload failed. You can still export locally.";
+        uploadFeedback.className = "upload-status status-error";
+      } finally {
+        uploadFeedback.classList.remove('hidden');
+        uploadBtn.disabled = false;
+        uploadBtn.textContent = "📤 Upload to Google Sheets (via secure proxy)";
+      }
+    }
+
+    // === START ===
+    btnConsent.addEventListener('click', () => {
+      PARTICIPANT_ID = (surveyIdInput.value || '').trim().toUpperCase() || 'ANON';
+      SCENARIOS = shuffleArray(BASE_SCENARIOS); // Randomise order!
+      window.startTime = Date.now();
+      showScenario(0);
+    });
+
+    btnExport.addEventListener('click', exportCSV);
+    btnUpload.addEventListener('click', uploadToSheets);
+
+    showIntro();
+  </script>
+</body>
+</html>
